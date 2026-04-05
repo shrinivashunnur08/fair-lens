@@ -62,14 +62,15 @@ export default function Upload() {
     mapping.outcomeCol && Object.keys(mapping.protectedCols).length > 0;
 
   /* ── Submit: upload file → save Firestore doc → navigate to dashboard */
+  /* ── Submit ── */
   const handleSubmit = async () => {
     if (!canProceedStep2) return;
     setSubmitting(true);
+    setUploadError(null);
 
     try {
       toast.loading("Uploading dataset…", { id: "upload" });
 
-      // Send file + metadata directly to backend
       const formData = new FormData();
       formData.append("file", file);
       formData.append("outcomeCol", mapping.outcomeCol);
@@ -85,7 +86,7 @@ export default function Upload() {
 
       const res = await fetch("/api/analyze", {
         method: "POST",
-        body: formData, // No Content-Type header — browser sets it automatically
+        body: formData,
       });
 
       const data = await res.json().catch(() => ({}));
@@ -257,7 +258,6 @@ export default function Upload() {
                 </p>
                 <ColumnMapper
                   headers={headers}
-                  previewRows={previewRows}
                   onChange={handleMappingChange}
                 />
               </div>
