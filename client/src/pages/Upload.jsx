@@ -84,7 +84,7 @@ export default function Upload() {
       setUploadPct(40);
       toast.loading("Sending to bias engine…", { id: "upload" });
 
-      const res = await fetch("/api/analyze", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/analyze`, {
         method: "POST",
         body: formData,
       });
