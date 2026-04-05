@@ -13,10 +13,15 @@ const PORT = process.env.PORT || 3001;
 /* ── Middleware ─────────────────────────────────────── */
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://fairlens-14363.web.app",
+      "https://fairlens-14363.firebaseapp.com",
+    ],
     credentials: true,
   }),
 );
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
