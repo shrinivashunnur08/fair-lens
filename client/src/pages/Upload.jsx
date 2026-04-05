@@ -107,6 +107,11 @@ export default function Upload() {
       }
 
       const { analysisId } = data;
+      if (!analysisId) {
+        throw new Error(
+          "Server did not return an analysis ID. The CSV may have failed to parse.",
+        );
+      }
       setUploadPct(100);
       toast.success("Analysis started!", { id: "upload" });
       navigate(`/dashboard/${analysisId}`);

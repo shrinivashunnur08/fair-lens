@@ -61,6 +61,10 @@ export default function SamplePicker({ onSelect }) {
       // Fetch the CSV file from the server's /samples directory
       const res = await fetch(sample.file);
       if (!res.ok) throw new Error("Failed to load sample");
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("text/html")) {
+        throw new Error("Sample CSV not found on server");
+      }
       const blob = await res.blob();
       const file = new File([blob], `${sample.name.replace(/\s+/g, "_")}.csv`, {
         type: "text/csv",
