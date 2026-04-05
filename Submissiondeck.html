@@ -1,0 +1,1672 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FairLens — Submission Deck</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #05050f;
+        --card: #0c0c1e;
+        --border: #1e1e3f;
+        --brand: #6366f1;
+        --brand-l: #818cf8;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --white: #f1f5f9;
+        --muted: #64748b;
+        --subtle: #94a3b8;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-snap-type: y mandatory;
+      }
+      body {
+        background: var(--bg);
+        color: var(--white);
+        font-family: "Manrope", sans-serif;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: "Syne", sans-serif;
+        letter-spacing: -0.02em;
+      }
+
+      /* Slide base */
+      .slide {
+        min-height: 100vh;
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .slide-inner {
+        max-width: 1000px;
+        width: 100%;
+        z-index: 2;
+      }
+      .slide-num {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        font-family: "Syne", sans-serif;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 600;
+        letter-spacing: 0.1em;
+      }
+
+      /* Grid bg on select slides */
+      .bg-grid {
+        background-image:
+          linear-gradient(rgba(99, 102, 241, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      /* Glows */
+      .glow-purple {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: rgba(99, 102, 241, 0.08);
+        filter: blur(100px);
+        pointer-events: none;
+      }
+      .glow-blue {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.06);
+        filter: blur(80px);
+        pointer-events: none;
+      }
+
+      /* Labels */
+      .label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--brand-l);
+        margin-bottom: 0.75rem;
+        display: block;
+      }
+
+      /* Cards */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+      }
+      .card.accent {
+        border-left: 3px solid var(--brand);
+      }
+
+      /* Badges */
+      .badge {
+        display: inline-block;
+        padding: 3px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .badge-brand {
+        background: rgba(99, 102, 241, 0.15);
+        color: var(--brand-l);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+      }
+      .badge-success {
+        background: rgba(16, 185, 129, 0.15);
+        color: #4ade80;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+      .badge-danger {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+      .badge-warning {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+
+      /* Metric */
+      .metric {
+        text-align: center;
+      }
+      .metric-val {
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+      .metric-label {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 0.25rem;
+      }
+
+      /* Progress */
+      .prog-bar {
+        height: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 6px 0;
+      }
+      .prog-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+
+      /* Flow step */
+      .flow-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .flow-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--brand);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .flow-title {
+        font-family: "Syne", sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--white);
+        margin-bottom: 3px;
+      }
+      .flow-desc {
+        font-size: 13px;
+        color: var(--subtle);
+        line-height: 1.5;
+      }
+
+      /* Grid helpers */
+      .g2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .g3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+      }
+      .g4 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 1rem;
+      }
+
+      /* Nav dots */
+      #nav-dots {
+        position: fixed;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 100;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--border);
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .dot.active {
+        background: var(--brand);
+        transform: scale(1.4);
+      }
+
+      @media (max-width: 640px) {
+        .g2,
+        .g3,
+        .g4 {
+          grid-template-columns: 1fr;
+        }
+        .slide {
+          padding: 2rem 1.25rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Nav dots -->
+    <div id="nav-dots">
+      <div class="dot" onclick="scrollTo(0)"></div>
+      <div class="dot" onclick="scrollTo(1)"></div>
+      <div class="dot" onclick="scrollTo(2)"></div>
+      <div class="dot" onclick="scrollTo(3)"></div>
+      <div class="dot" onclick="scrollTo(4)"></div>
+      <div class="dot" onclick="scrollTo(5)"></div>
+      <div class="dot" onclick="scrollTo(6)"></div>
+    </div>
+
+    <!-- ═══ SLIDE 1: TITLE ══════════════════════════════════════ -->
+    <section class="slide bg-grid" id="slide-0">
+      <div class="glow-purple" style="top: -200px; left: -200px"></div>
+      <div class="glow-blue" style="bottom: -100px; right: -100px"></div>
+      <div class="slide-inner" style="text-align: center">
+        <span
+          class="badge badge-brand"
+          style="margin-bottom: 1.5rem; display: inline-block"
+          >Google Solution Challenge 2026 · Unbiased AI Decision</span
+        >
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+          "
+        >
+          <div
+            style="
+              width: 52px;
+              height: 52px;
+              border-radius: 14px;
+              background: linear-gradient(135deg, #6366f1, #7c3aed);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+            "
+          >
+            <svg width="28" height="28" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="3" fill="white" />
+              <circle cx="3" cy="4" r="1.5" fill="white" opacity=".6" />
+              <circle cx="13" cy="4" r="1.5" fill="white" opacity=".6" />
+              <circle cx="3" cy="12" r="1.5" fill="white" opacity=".4" />
+              <circle cx="13" cy="12" r="1.5" fill="white" opacity=".4" />
+              <line
+                x1="8"
+                y1="5"
+                x2="3"
+                y2="4"
+                stroke="white"
+                stroke-width=".8"
+                opacity=".5"
+              />
+              <line
+                x1="8"
+                y1="5"
+                x2="13"
+                y2="4"
+                stroke="white"
+                stroke-width=".8"
+                opacity=".5"
+              />
+            </svg>
+          </div>
+          <h1
+            style="
+              font-size: 3.5rem;
+              font-weight: 800;
+              background: linear-gradient(135deg, #818cf8, #c084fc, #38bdf8);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+          >
+            FairLens
+          </h1>
+        </div>
+        <p
+          style="
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--subtle);
+            margin-bottom: 0.75rem;
+          "
+        >
+          Find bias before it finds your users
+        </p>
+        <p
+          style="
+            font-size: 1rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+          "
+        >
+          AI-powered bias detection and audit platform that inspects datasets
+          for hidden discrimination and generates professional audit reports —
+          powered by Gemini 2.5 flash.
+        </p>
+        <div
+          style="
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+          "
+        >
+          <span class="badge badge-brand">Gemini 2.5 flash</span>
+          <span class="badge badge-brand">Firebase</span>
+          <span class="badge badge-brand">Google Cloud Run</span>
+          <span class="badge badge-brand">React + Node.js</span>
+        </div>
+      </div>
+      <div class="slide-num">01 / 07</div>
+    </section>
+
+    <!-- ═══ SLIDE 2: PROBLEM ════════════════════════════════════ -->
+    <section class="slide" id="slide-1">
+      <div
+        class="glow-purple"
+        style="top: -100px; right: -200px; background: rgba(239, 68, 68, 0.06)"
+      ></div>
+      <div class="slide-inner">
+        <span class="label">The Problem</span>
+        <h2
+          style="
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.15;
+          "
+        >
+          AI systems make life-changing decisions — and most are
+          <span style="color: var(--danger)">silently biased</span>
+        </h2>
+        <p
+          style="
+            color: var(--subtle);
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            line-height: 1.7;
+          "
+        >
+          Hiring algorithms, loan models, and medical AI systems learn from
+          historical data — and silently inherit its discrimination. The
+          problem: organizations have no easy way to detect it.
+        </p>
+        <div class="g3" style="margin-bottom: 2rem">
+          <div class="card accent">
+            <div
+              style="
+                font-size: 2rem;
+                font-weight: 800;
+                color: var(--danger);
+                font-family: &quot;Syne&quot;, sans-serif;
+              "
+            >
+              67%
+            </div>
+            <div
+              style="font-size: 13px; color: var(--subtle); margin-top: 0.25rem"
+            >
+              of AI hiring tools show gender bias against women
+            </div>
+          </div>
+          <div class="card accent">
+            <div
+              style="
+                font-size: 2rem;
+                font-weight: 800;
+                color: var(--warning);
+                font-family: &quot;Syne&quot;, sans-serif;
+              "
+            >
+              40%
+            </div>
+            <div
+              style="font-size: 13px; color: var(--subtle); margin-top: 0.25rem"
+            >
+              racial disparity found in financial AI credit scoring models
+            </div>
+          </div>
+          <div class="card accent">
+            <div
+              style="
+                font-size: 2rem;
+                font-weight: 800;
+                color: var(--danger);
+                font-family: &quot;Syne&quot;, sans-serif;
+              "
+            >
+              $300M+
+            </div>
+            <div
+              style="font-size: 13px; color: var(--subtle); margin-top: 0.25rem"
+            >
+              in EEOC discrimination fines paid by tech companies since 2020
+            </div>
+          </div>
+        </div>
+        <div
+          class="card"
+          style="
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.2);
+          "
+        >
+          <p style="font-size: 14px; color: #fca5a5; line-height: 1.7">
+            <strong style="color: var(--danger)">The gap:</strong> Data
+            scientists lack accessible tools to audit fairness. Legal teams
+            can't read bias reports written in Python. Business stakeholders
+            don't know the risk until regulators knock.
+            <strong style="color: var(--danger)"
+              >FairLens closes this gap.</strong
+            >
+          </p>
+        </div>
+      </div>
+      <div class="slide-num">02 / 07</div>
+    </section>
+
+    <!-- ═══ SLIDE 3: SOLUTION ═══════════════════════════════════ -->
+    <section class="slide bg-grid" id="slide-2">
+      <div class="glow-purple" style="bottom: -100px; left: -100px"></div>
+      <div class="slide-inner">
+        <span class="label">Our Solution</span>
+        <h2
+          style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.75rem"
+        >
+          FairLens — From CSV to audit report in 60 seconds
+        </h2>
+        <p
+          style="
+            color: var(--subtle);
+            font-size: 0.95rem;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+            max-width: 700px;
+          "
+        >
+          Upload any dataset. FairLens computes industry-standard bias metrics,
+          uses Gemini to explain findings in plain English, and generates a
+          board-ready PDF audit report.
+        </p>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 1.5rem;
+            align-items: start;
+          "
+        >
+          <div>
+            <div class="flow-step">
+              <div class="flow-num">1</div>
+              <div>
+                <div class="flow-title">Upload CSV dataset</div>
+                <div class="flow-desc">
+                  Drag-and-drop hiring records, loan decisions, or any tabular
+                  data. Auto-detects protected attributes.
+                </div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num">2</div>
+              <div>
+                <div class="flow-title">Map outcome column</div>
+                <div class="flow-desc">
+                  Confirm which column is the AI's decision (hired/approved).
+                  One click — auto-detection handles most cases.
+                </div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num">3</div>
+              <div>
+                <div class="flow-title">Gemini analyzes bias</div>
+                <div class="flow-desc">
+                  12+ statistical metrics computed. Gemini 2.5 flash explains
+                  what each finding means in plain English with legal
+                  implications.
+                </div>
+              </div>
+            </div>
+            <div class="flow-step" style="margin-bottom: 0">
+              <div class="flow-num">4</div>
+              <div>
+                <div class="flow-title">Download audit report</div>
+                <div class="flow-desc">
+                  Professional PDF report ready for legal, compliance, or board
+                  presentation. What-If simulator shows how to fix it.
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Mock dashboard card -->
+          <div class="card" style="position: relative">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+              "
+            >
+              <div>
+                <div
+                  style="
+                    font-size: 11px;
+                    color: var(--muted);
+                    text-transform: uppercase;
+                    letter-spacing: 0.08em;
+                    margin-bottom: 4px;
+                  "
+                >
+                  Fairness Score
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 0.5rem">
+                  <span
+                    style="
+                      font-family: &quot;Syne&quot;, sans-serif;
+                      font-weight: 800;
+                      font-size: 2.5rem;
+                      color: var(--danger);
+                    "
+                    >D−</span
+                  >
+                  <span style="color: var(--danger); font-size: 14px"
+                    >32/100</span
+                  >
+                </div>
+              </div>
+              <span class="badge badge-danger">2 violations</span>
+            </div>
+            <div style="margin-bottom: 1rem">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  font-size: 12px;
+                  margin-bottom: 4px;
+                "
+              >
+                <span style="color: var(--muted)">Gender disparity</span
+                ><span style="color: var(--danger); font-weight: 700"
+                  >38% gap</span
+                >
+              </div>
+              <div class="prog-bar">
+                <div
+                  class="prog-fill"
+                  style="width: 78%; background: #ef4444"
+                ></div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  font-size: 12px;
+                  margin-bottom: 4px;
+                  margin-top: 8px;
+                "
+              >
+                <span style="color: var(--muted)">Race disparity</span
+                ><span style="color: var(--warning); font-weight: 700"
+                  >22% gap</span
+                >
+              </div>
+              <div class="prog-bar">
+                <div
+                  class="prog-fill"
+                  style="width: 55%; background: #f59e0b"
+                ></div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  font-size: 12px;
+                  margin-bottom: 4px;
+                  margin-top: 8px;
+                "
+              >
+                <span style="color: var(--muted)">Age disparity</span
+                ><span style="color: #4ade80; font-weight: 700">8% gap</span>
+              </div>
+              <div class="prog-bar">
+                <div
+                  class="prog-fill"
+                  style="width: 22%; background: #10b981"
+                ></div>
+              </div>
+            </div>
+            <div
+              style="
+                background: rgba(99, 102, 241, 0.08);
+                border: 1px solid rgba(99, 102, 241, 0.2);
+                border-radius: 10px;
+                padding: 0.75rem;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  margin-bottom: 0.4rem;
+                "
+              >
+                <div
+                  style="
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 5px;
+                    background: linear-gradient(135deg, #3b82f6, #7c3aed);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                  "
+                >
+                  <span style="color: white; font-size: 9px; font-weight: 700"
+                    >G</span
+                  >
+                </div>
+                <span
+                  style="
+                    color: var(--brand-l);
+                    font-size: 11px;
+                    font-weight: 700;
+                  "
+                  >Gemini 2.5 flash</span
+                >
+              </div>
+              <p
+                style="font-size: 11px; color: var(--subtle); line-height: 1.5"
+              >
+                "Women in engineering are 38% less likely to be hired despite
+                equal qualifications — this constitutes disparate impact under
+                EEOC 4/5ths rule..."
+              </p>
+            </div>
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                border-radius: 16px;
+                border: 1px solid rgba(239, 68, 68, 0.2);
+                pointer-events: none;
+              "
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-num">03 / 07</div>
+    </section>
+
+    <!-- ═══ SLIDE 4: TECH STACK ═════════════════════════════════ -->
+    <section class="slide" id="slide-3">
+      <div class="glow-purple" style="top: -50px; right: -150px"></div>
+      <div class="slide-inner">
+        <span class="label">Technical Architecture</span>
+        <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 2.5rem">
+          Built entirely on Google technologies
+        </h2>
+        <div class="g2" style="margin-bottom: 1.5rem">
+          <div class="card" style="border-color: rgba(99, 102, 241, 0.3)">
+            <div
+              style="
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--brand-l);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: 1rem;
+              "
+            >
+              Google AI (Core)
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem">
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: var(--brand);
+                    margin-top: 5px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      font-size: 13px;
+                      color: var(--white);
+                    "
+                  >
+                    Gemini 2.5 flash API
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    Bias explanation, legal risk analysis, full audit report
+                    generation
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: var(--brand);
+                    margin-top: 5px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      font-size: 13px;
+                      color: var(--white);
+                    "
+                  >
+                    Firebase Auth
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    Google Sign-In, secure user sessions
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: var(--brand);
+                    margin-top: 5px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      font-size: 13px;
+                      color: var(--white);
+                    "
+                  >
+                    Firestore
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    Real-time analysis results, dataset storage, user history
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: var(--brand);
+                    margin-top: 5px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      font-size: 13px;
+                      color: var(--white);
+                    "
+                  >
+                    Google Cloud Run
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    Serverless deployment, auto-scaling, production hosting
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div
+              style="
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: 1rem;
+              "
+            >
+              Application Stack
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem">
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #94a3b8;
+                    margin-top: 5px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      font-size: 13px;
+                      color: var(--white);
+                    "
+                  >
+                    React 18 + Vite
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    Frontend SPA with Recharts visualizations + Framer Motion
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #94a3b8;
+                    margin-top: 5px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      font-size: 13px;
+                      color: var(--white);
+                    "
+                  >
+                    Node.js + Express
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    Bias metrics engine, CSV parsing, PDF generation
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #94a3b8;
+                    margin-top: 5px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      font-size: 13px;
+                      color: var(--white);
+                    "
+                  >
+                    pdf-lib
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    Server-side professional audit report generation
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.75rem; align-items: flex-start">
+                <div
+                  style="
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #94a3b8;
+                    margin-top: 5px;
+                    flex-shrink: 0;
+                  "
+                ></div>
+                <div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      font-size: 13px;
+                      color: var(--white);
+                    "
+                  >
+                    Docker + Cloud Build
+                  </div>
+                  <div style="font-size: 12px; color: var(--muted)">
+                    Containerized CI/CD pipeline for Cloud Run
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Bias metrics -->
+        <div class="card">
+          <div
+            style="
+              font-size: 11px;
+              font-weight: 700;
+              color: var(--muted);
+              text-transform: uppercase;
+              letter-spacing: 0.08em;
+              margin-bottom: 0.75rem;
+            "
+          >
+            Fairness Metrics Computed
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap">
+            <span class="badge badge-brand">Disparate Impact Ratio</span>
+            <span class="badge badge-brand">Statistical Parity Difference</span>
+            <span class="badge badge-brand">Equal Opportunity Difference</span>
+            <span
+              class="badge"
+              style="
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--subtle);
+                border: 1px solid var(--border);
+              "
+              >Per-group approval rates</span
+            >
+            <span
+              class="badge"
+              style="
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--subtle);
+                border: 1px solid var(--border);
+              "
+              >EEOC 4/5ths rule check</span
+            >
+            <span
+              class="badge"
+              style="
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--subtle);
+                border: 1px solid var(--border);
+              "
+              >Fairness Grade A–F</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="slide-num">04 / 07</div>
+    </section>
+
+    <!-- ═══ SLIDE 5: KEY FEATURES ═══════════════════════════════ -->
+    <section class="slide bg-grid" id="slide-4">
+      <div class="glow-blue" style="bottom: -100px; right: -100px"></div>
+      <div class="slide-inner">
+        <span class="label">Key Features</span>
+        <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 2rem">
+          Everything needed for a complete bias audit
+        </h2>
+        <div class="g3">
+          <div class="card">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: rgba(99, 102, 241, 0.15);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.75rem;
+              "
+            >
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="#818cf8"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
+            </div>
+            <div
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-weight: 700;
+                color: var(--white);
+                margin-bottom: 0.4rem;
+              "
+            >
+              Smart Upload
+            </div>
+            <div style="font-size: 12px; color: var(--muted); line-height: 1.6">
+              Drag-and-drop CSV with auto-detection of protected attributes
+              (gender, race, age) and outcome columns.
+            </div>
+          </div>
+          <div class="card">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: rgba(99, 102, 241, 0.15);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.75rem;
+              "
+            >
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="#818cf8"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </div>
+            <div
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-weight: 700;
+                color: var(--white);
+                margin-bottom: 0.4rem;
+              "
+            >
+              Visual Dashboard
+            </div>
+            <div style="font-size: 12px; color: var(--muted); line-height: 1.6">
+              Interactive bar charts, radar graphs, and per-group approval rate
+              tables. Fairness grade A–F with animated score rings.
+            </div>
+          </div>
+          <div class="card">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: rgba(99, 102, 241, 0.15);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.75rem;
+              "
+            >
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="#818cf8"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <div
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-weight: 700;
+                color: var(--white);
+                margin-bottom: 0.4rem;
+              "
+            >
+              Gemini Explainer
+            </div>
+            <div style="font-size: 12px; color: var(--muted); line-height: 1.6">
+              Click any finding → Gemini 2.5 flash explains what it means, who
+              is harmed, legal implications, and exact remediation steps.
+            </div>
+          </div>
+          <div class="card">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: rgba(99, 102, 241, 0.15);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.75rem;
+              "
+            >
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="#818cf8"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                />
+              </svg>
+            </div>
+            <div
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-weight: 700;
+                color: var(--white);
+                margin-bottom: 0.4rem;
+              "
+            >
+              What-If Simulator
+            </div>
+            <div style="font-size: 12px; color: var(--muted); line-height: 1.6">
+              Toggle attributes off and watch fairness score animate in real
+              time. Find the minimum change needed to reach a fair model.
+            </div>
+          </div>
+          <div class="card">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: rgba(99, 102, 241, 0.15);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.75rem;
+              "
+            >
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="#818cf8"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <div
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-weight: 700;
+                color: var(--white);
+                margin-bottom: 0.4rem;
+              "
+            >
+              PDF Audit Report
+            </div>
+            <div style="font-size: 12px; color: var(--muted); line-height: 1.6">
+              One click → Gemini writes a 3-page professional audit with
+              findings, legal risk, recommendations. Downloadable instantly.
+            </div>
+          </div>
+          <div class="card">
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: rgba(99, 102, 241, 0.15);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.75rem;
+              "
+            >
+              <svg
+                width="18"
+                height="18"
+                fill="none"
+                stroke="#818cf8"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-weight: 700;
+                color: var(--white);
+                margin-bottom: 0.4rem;
+              "
+            >
+              Analysis History
+            </div>
+            <div style="font-size: 12px; color: var(--muted); line-height: 1.6">
+              All past analyses saved in Firestore. Review, compare, and track
+              fairness improvements over time.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-num">05 / 07</div>
+    </section>
+
+    <!-- ═══ SLIDE 6: EVALUATION ALIGNMENT ══════════════════════ -->
+    <section class="slide" id="slide-5">
+      <div class="glow-purple" style="top: -50px; left: -200px"></div>
+      <div class="slide-inner">
+        <span class="label">Evaluation Criteria Alignment</span>
+        <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 2rem">
+          Built to win on every criterion
+        </h2>
+        <div style="display: flex; flex-direction: column; gap: 1rem">
+          <div
+            class="card"
+            style="
+              display: grid;
+              grid-template-columns: 60px 1fr;
+              gap: 1.25rem;
+              align-items: start;
+            "
+          >
+            <div style="text-align: center">
+              <div
+                style="
+                  font-family: &quot;Syne&quot;, sans-serif;
+                  font-weight: 800;
+                  font-size: 2rem;
+                  color: var(--brand-l);
+                "
+              >
+                40%
+              </div>
+              <div
+                style="
+                  font-size: 10px;
+                  color: var(--muted);
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                Technical
+              </div>
+            </div>
+            <div>
+              <div
+                style="
+                  font-family: &quot;Syne&quot;, sans-serif;
+                  font-weight: 700;
+                  color: var(--white);
+                  margin-bottom: 0.4rem;
+                "
+              >
+                Technical Merit
+              </div>
+              <div
+                style="font-size: 13px; color: var(--subtle); line-height: 1.6"
+              >
+                Gemini 2.5 flash deeply integrated (explanations + full audit
+                report). Firebase Auth + Firestore real-time updates.
+                Statistical bias engine computes DIR, SPD, group rates. Deployed
+                on Google Cloud Run. Full-stack React + Node.js.
+              </div>
+            </div>
+          </div>
+          <div
+            class="card"
+            style="
+              display: grid;
+              grid-template-columns: 60px 1fr;
+              gap: 1.25rem;
+              align-items: start;
+            "
+          >
+            <div style="text-align: center">
+              <div
+                style="
+                  font-family: &quot;Syne&quot;, sans-serif;
+                  font-weight: 800;
+                  font-size: 2rem;
+                  color: #10b981;
+                "
+              >
+                25%
+              </div>
+              <div
+                style="
+                  font-size: 10px;
+                  color: var(--muted);
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                Cause
+              </div>
+            </div>
+            <div>
+              <div
+                style="
+                  font-family: &quot;Syne&quot;, sans-serif;
+                  font-weight: 700;
+                  color: var(--white);
+                  margin-bottom: 0.4rem;
+                "
+              >
+                Alignment With Cause
+              </div>
+              <div
+                style="font-size: 13px; color: var(--subtle); line-height: 1.6"
+              >
+                Directly solves the challenge statement: "Build a clear,
+                accessible solution to inspect datasets for hidden unfairness
+                and provide an easy way to measure, flag, and fix harmful bias."
+                Every feature maps to this objective.
+              </div>
+            </div>
+          </div>
+          <div
+            class="card"
+            style="
+              display: grid;
+              grid-template-columns: 60px 1fr;
+              gap: 1.25rem;
+              align-items: start;
+            "
+          >
+            <div style="text-align: center">
+              <div
+                style="
+                  font-family: &quot;Syne&quot;, sans-serif;
+                  font-weight: 800;
+                  font-size: 2rem;
+                  color: var(--warning);
+                "
+              >
+                25%
+              </div>
+              <div
+                style="
+                  font-size: 10px;
+                  color: var(--muted);
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                Innovation
+              </div>
+            </div>
+            <div>
+              <div
+                style="
+                  font-family: &quot;Syne&quot;, sans-serif;
+                  font-weight: 700;
+                  color: var(--white);
+                  margin-bottom: 0.4rem;
+                "
+              >
+                Innovation & Creativity
+              </div>
+              <div
+                style="font-size: 13px; color: var(--subtle); line-height: 1.6"
+              >
+                What-If Simulator (unique — toggle attributes, live score
+                update). Gemini-written PDF audit report (novel use case). A–F
+                Fairness Grade Card (instantly communicates severity to
+                non-technical audiences). Plain-English AI explanations lower
+                barrier to fairness auditing.
+              </div>
+            </div>
+          </div>
+          <div
+            class="card"
+            style="
+              display: grid;
+              grid-template-columns: 60px 1fr;
+              gap: 1.25rem;
+              align-items: start;
+            "
+          >
+            <div style="text-align: center">
+              <div
+                style="
+                  font-family: &quot;Syne&quot;, sans-serif;
+                  font-weight: 800;
+                  font-size: 2rem;
+                  color: #22c55e;
+                "
+              >
+                10%
+              </div>
+              <div
+                style="
+                  font-size: 10px;
+                  color: var(--muted);
+                  text-transform: uppercase;
+                  letter-spacing: 0.06em;
+                "
+              >
+                UX
+              </div>
+            </div>
+            <div>
+              <div
+                style="
+                  font-family: &quot;Syne&quot;, sans-serif;
+                  font-weight: 700;
+                  color: var(--white);
+                  margin-bottom: 0.4rem;
+                "
+              >
+                User Experience
+              </div>
+              <div
+                style="font-size: 13px; color: var(--subtle); line-height: 1.6"
+              >
+                Dark-mode first design. Animated dashboard. 3-step upload flow.
+                Sample datasets for instant demo. Real-time Firestore updates —
+                no page refresh needed. Works on mobile.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-num">06 / 07</div>
+    </section>
+
+    <!-- ═══ SLIDE 7: CLOSING ════════════════════════════════════ -->
+    <section class="slide bg-grid" id="slide-6">
+      <div class="glow-purple" style="top: -100px; left: -100px"></div>
+      <div class="glow-blue" style="bottom: -100px; right: -100px"></div>
+      <div class="slide-inner" style="text-align: center">
+        <span class="label">The Impact</span>
+        <h2
+          style="
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.15;
+          "
+        >
+          Stop letting bias<br /><span
+            style="
+              background: linear-gradient(135deg, #818cf8, #c084fc);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+            >slip through</span
+          >
+        </h2>
+        <p
+          style="
+            color: var(--subtle);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+          "
+        >
+          FairLens makes AI bias auditing accessible to every organization — not
+          just those with dedicated ML fairness teams. Any HR manager, bank
+          compliance officer, or hospital administrator can now audit their AI
+          in 60 seconds.
+        </p>
+        <div class="g4" style="margin-bottom: 2.5rem">
+          <div class="metric">
+            <div class="metric-val" style="color: var(--brand-l)">60s</div>
+            <div class="metric-label">Upload to audit report</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--success)">12+</div>
+            <div class="metric-label">Fairness metrics computed</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: var(--warning)">3</div>
+            <div class="metric-label">Google AI services used</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val" style="color: #f87171">100%</div>
+            <div class="metric-label">Google Cloud deployed</div>
+          </div>
+        </div>
+        <div
+          style="
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+          "
+        >
+          <a
+            href="#"
+            style="
+              display: inline-flex;
+              align-items: center;
+              gap: 0.5rem;
+              padding: 0.75rem 1.75rem;
+              background: linear-gradient(135deg, #6366f1, #4f46e5);
+              color: white;
+              border-radius: 10px;
+              font-weight: 700;
+              font-size: 0.9rem;
+              text-decoration: none;
+              font-family: &quot;Manrope&quot;, sans-serif;
+            "
+          >
+            View Live Demo →
+          </a>
+          <a
+            href="https://github.com"
+            target="_blank"
+            style="
+              display: inline-flex;
+              align-items: center;
+              gap: 0.5rem;
+              padding: 0.75rem 1.75rem;
+              background: transparent;
+              color: var(--subtle);
+              border-radius: 10px;
+              font-weight: 700;
+              font-size: 0.9rem;
+              text-decoration: none;
+              border: 1px solid var(--border);
+              font-family: &quot;Manrope&quot;, sans-serif;
+            "
+          >
+            GitHub Repository ↗
+          </a>
+        </div>
+        <p style="font-size: 12px; color: var(--muted)">
+          Built with Gemini 2.5 flash · Firebase · Google Cloud Run · Google
+          Solution Challenge 2026
+        </p>
+      </div>
+      <div class="slide-num">07 / 07</div>
+    </section>
+
+    <script>
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".dot");
+
+      function scrollTo(i) {
+        slides[i].scrollIntoView({ behavior: "smooth" });
+      }
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              const i = Array.from(slides).indexOf(e.target);
+              dots.forEach((d, j) => d.classList.toggle("active", i === j));
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+
+      slides.forEach((s) => obs.observe(s));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+applicant_id,gender,race,age,income,credit_score,loan_approved
+1,Male,White,34,75000,720,1
+2,Female,Black,28,52000,690,0
+3,Male,White,45,92000,750,1
+4,Female,Hispanic,31,48000,680,0
+5,Male,Asian,38,88000,740,1
+6,Female,Black,25,41000,660,0
+7,Male,White,52,110000,780,1
+8,Female,White,29,61000,700,1
+9,Male,Hispanic,36,55000,695,0
+10,Female,Asian,33,79000,725,1

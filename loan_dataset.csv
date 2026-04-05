@@ -1,0 +1,11 @@
+Applicant_ID,Age,Income,Employment_Type,Credit_Score,Loan_Amount,Loan_Term,Existing_Loan,Marital_Status,Loan_Status
+A001,25,35000,Salaried,720,150000,36,No,Single,Approved
+A002,32,48000,Salaried,680,200000,48,Yes,Married,Approved
+A003,29,22000,Self-Employed,610,120000,24,No,Single,Rejected
+A004,41,52000,Salaried,750,250000,60,Yes,Married,Approved
+A005,35,30000,Self-Employed,640,180000,36,Yes,Married,Rejected
+A006,27,27000,Salaried,700,140000,36,No,Single,Approved
+A007,45,60000,Business,780,300000,60,Yes,Married,Approved
+A008,31,26000,Salaried,620,130000,24,No,Single,Rejected
+A009,38,45000,Salaried,710,210000,48,Yes,Married,Approved
+A010,28,24000,Self-Employed,590,100000,24,No,Single,Rejected

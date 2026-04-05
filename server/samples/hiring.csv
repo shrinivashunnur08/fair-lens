@@ -1,0 +1,11 @@
+candidate_id,gender,age,education_level,years_experience,skills_score,hired
+1,Male,28,Tier1,5,88,1
+2,Female,26,Tier2,3,82,0
+3,Male,34,Tier1,8,91,1
+4,Female,29,Tier1,5,85,0
+5,Male,41,Tier2,12,78,1
+6,Female,23,Tier3,1,74,0
+7,Male,31,Tier1,7,93,1
+8,Female,35,Tier1,9,89,0
+9,Male,27,Tier2,4,81,1
+10,Female,30,Tier2,6,87,0

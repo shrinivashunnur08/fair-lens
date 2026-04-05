@@ -1,0 +1,11 @@
+patient_id,gender,age_group,insurance_type,condition_severity,treatment_recommended
+1,Male,Adult,Private,Moderate,1
+2,Female,Adult,Public,Moderate,0
+3,Male,Senior,Private,High,1
+4,Female,Senior,Public,High,0
+5,Male,Adult,Private,Low,1
+6,Female,Adult,Public,Low,0
+7,Male,Senior,Private,Moderate,1
+8,Female,Adult,Private,High,1
+9,Male,Adult,Public,Moderate,0
+10,Female,Senior,Public,Low,0
