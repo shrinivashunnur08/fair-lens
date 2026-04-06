@@ -137,11 +137,14 @@ export default function BiasFixCode({ analysisId, biasResults = [] }) {
     setResult(null);
     toast.loading("Fair Lens is writing your fix code…", { id: "fix" });
     try {
-      const res = await fetch(`/api/fix/${analysisId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ strategy }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/fix/${analysisId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ strategy }),
+        },
+      );
       if (!res.ok) throw new Error((await res.json()).error || "Failed");
       const data = await res.json();
       setResult(data);

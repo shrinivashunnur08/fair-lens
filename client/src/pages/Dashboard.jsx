@@ -537,7 +537,10 @@ export default function Dashboard() {
       id: "report",
     });
     try {
-      const res = await fetch(`/api/report/${id}`, { method: "POST" });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/report/${id}`,
+        { method: "POST" },
+      );
       if (!res.ok) throw new Error("Report generation failed");
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);

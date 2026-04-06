@@ -74,7 +74,7 @@ export default function GeminiChat({ analysisId, isOpen, onClose }) {
   /* Load suggested questions on open */
   useEffect(() => {
     if (!isOpen || !analysisId) return;
-    fetch(`/api/chat/${analysisId}/suggestions`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/chat/${analysisId}/suggestions`)
       .then((r) => r.json())
       .then((d) => setSuggestions(d.suggestions || []))
       .catch(() => {});
@@ -110,17 +110,20 @@ export default function GeminiChat({ analysisId, isOpen, onClose }) {
       setStreaming(true);
 
       try {
-        const res = await fetch(`/api/chat/${analysisId}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: msg,
-            history: history
-              .slice(-8)
-              .map((m) => ({ role: m.role, content: m.content })),
-          }),
-          signal: (abortRef.current = new AbortController()).signal,
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/chat/${analysisId}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: msg,
+              history: history
+                .slice(-8)
+                .map((m) => ({ role: m.role, content: m.content })),
+            }),
+            signal: (abortRef.current = new AbortController()).signal,
+          },
+        );
 
         if (!res.ok || !res.body) {
           throw new Error("Chat request failed");

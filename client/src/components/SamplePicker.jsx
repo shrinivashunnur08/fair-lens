@@ -8,7 +8,7 @@ const STATIC_SAMPLES = [
   {
     id: "hiring",
     name: "TechCorp Hiring",
-    file: `/samples/hiring_dataset.csv`,
+    file: `${import.meta.env.VITE_API_URL}/samples/hiring_dataset.csv`,
     rows: 500,
     description: "Gender & race bias in engineering hiring decisions",
     outcome: "hired",
@@ -20,7 +20,7 @@ const STATIC_SAMPLES = [
   {
     id: "loan",
     name: "Bank Loan Approvals",
-    file: `/samples/loan_dataset.csv`,
+    file: `${import.meta.env.VITE_API_URL}/samples/loan_dataset.csv`,
     rows: 800,
     description: "Gender & race bias in loan decisions — ECOA risk",
     outcome: "loan_approved",
@@ -32,7 +32,7 @@ const STATIC_SAMPLES = [
   {
     id: "medical",
     name: "Medical Treatments",
-    file: `/samples/medical_dataset.csv`,
+    file: `${import.meta.env.VITE_API_URL}/samples/medical_dataset.csv`,
     rows: 600,
     description: "Race & age bias in treatment approvals",
     outcome: "treatment_approved",
