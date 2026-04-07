@@ -38,13 +38,16 @@ const studioModel = studioAI.getGenerativeModel({ model: "gemini-2.5-flash" });
  * Generate content using whichever service is available
  */
 async function generateContent(prompt, options = {}) {
+  const maxTokens = options.maxTokens || 8192;
+  const temperature = options.temperature || 0.4;
+
   if (vertexModel) {
     try {
       const request = {
         contents: [{ role: "user", parts: [{ text: prompt }] }],
         generationConfig: {
-          maxOutputTokens: options.maxTokens || 2048,
-          temperature: options.temperature || 0.4,
+          maxOutputTokens: maxTokens,
+          temperature: temperature,
         },
       };
       const result = await vertexModel.generateContent(request);
@@ -58,8 +61,14 @@ async function generateContent(prompt, options = {}) {
     }
   }
 
-  // Fallback to AI Studio
-  const result = await studioModel.generateContent(prompt);
+  // Fallback to AI Studio — now WITH generationConfig
+  const result = await studioModel.generateContent({
+    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    generationConfig: {
+      maxOutputTokens: maxTokens,
+      temperature: temperature,
+    },
+  });
   return result.response.text();
 }
 

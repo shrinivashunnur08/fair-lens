@@ -544,38 +544,26 @@ Format your response as JSON with this exact structure:
 }`;
 
   const text = await generateContent(prompt, {
-    maxTokens: 2048,
+    maxTokens: 8192,
     temperature: 0.4,
   });
 
-  // Extract JSON from Gemini's response
+  console.log("[Gemini] Response length:", text.length);
+  console.log("[Gemini] Last 100 chars:", text.slice(-100));
+
   // Extract JSON from Gemini's response
   try {
-    // Strip markdown code fences first
-    const cleaned = text
-      .replace(/^```json\s*/im, "")
-      .replace(/^```\s*/im, "")
-      .replace(/```\s*$/im, "")
-      .trim();
-
-    // Try parsing cleaned text directly
-    try {
-      return JSON.parse(cleaned);
-    } catch {
-      // Fall back to regex extraction
-      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-      if (jsonMatch) return JSON.parse(jsonMatch[0]);
+    const jsonStart = text.indexOf("{");
+    const jsonEnd = text.lastIndexOf("}");
+    if (jsonStart !== -1 && jsonEnd !== -1) {
+      return JSON.parse(text.substring(jsonStart, jsonEnd + 1));
     }
   } catch {
-    // Return structured fallback
+    // fall through to fallback
   }
 
   return {
-    overallSummary: text
-      .replace(/^```json\s*/im, "")
-      .replace(/```\s*$/im, "")
-      .replace(/"overallSummary":\s*"([^"]+)"/, "$1")
-      .substring(0, 500),
+    overallSummary: "Could not parse Gemini response.",
     severity: "UNKNOWN",
     findings: [],
     rawText: text,
