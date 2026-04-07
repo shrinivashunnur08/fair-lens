@@ -549,13 +549,13 @@ Format your response as JSON with this exact structure:
   });
 
   // Extract JSON from Gemini's response
-// Extract JSON from Gemini's response
+  // Extract JSON from Gemini's response
   try {
     // Strip markdown code fences first
     const cleaned = text
-      .replace(/^```json\s*/im, '')
-      .replace(/^```\s*/im, '')
-      .replace(/```\s*$/im, '')
+      .replace(/^```json\s*/im, "")
+      .replace(/^```\s*/im, "")
+      .replace(/```\s*$/im, "")
       .trim();
 
     // Try parsing cleaned text directly
@@ -572,15 +572,15 @@ Format your response as JSON with this exact structure:
 
   return {
     overallSummary: text
-      .replace(/^```json\s*/im, '')
-      .replace(/```\s*$/im, '')
-      .replace(/"overallSummary":\s*"([^"]+)"/, '$1')
+      .replace(/^```json\s*/im, "")
+      .replace(/```\s*$/im, "")
+      .replace(/"overallSummary":\s*"([^"]+)"/, "$1")
       .substring(0, 500),
     severity: "UNKNOWN",
     findings: [],
     rawText: text,
   };
-
+}
 /* ═══════════════════════════════════════════════════════════════
    POST /api/analyze
    Main analysis endpoint — called after file is uploaded to Storage

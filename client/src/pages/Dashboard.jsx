@@ -567,10 +567,8 @@ export default function Dashboard() {
           <p className="text-muted font-body mb-6">
             This analysis doesn't exist or you don't have access.
           </p>
-          <button onClick={() => navigate("/upload")} className="btn-primary">
-            Start new analysis
-          </button>
-          <button
+
+          {/* <button
             onClick={() => setChatOpen(true)}
             className="btn-ghost text-sm border-brand-500/40 text-brand-400 hover:bg-brand-500/8"
           >
@@ -588,7 +586,7 @@ export default function Dashboard() {
               />
             </svg>
             Ask AI
-          </button>
+          </button> */}
         </div>
       </div>
     );
