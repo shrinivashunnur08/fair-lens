@@ -32,6 +32,8 @@ app.use("/api/report", reportRoute);
 app.use("/api/chat", chatRoute);
 const fixRoute = require("./routes/fix");
 app.use("/api/fix", fixRoute);
+const trendsRoute = require("./routes/trends");
+app.use("/api/trends", trendsRoute);
 /* ── Health check (Cloud Run needs this) ───────────── */
 app.get("/health", (req, res) => {
   res.json({ status: "ok", service: "FairLens API", version: "1.0.0" });

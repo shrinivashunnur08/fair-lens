@@ -10,6 +10,7 @@ const { db } = require("../services/firebaseAdmin");
 // } = require("../services/csvParser");
 const upload = multer({ storage: multer.memoryStorage() });
 const { generateContent, getServiceInfo } = require("../services/geminiClient");
+const { logAnalysisToBigQuery } = require("../services/bigqueryClient");
 
 /* ═══════════════════════════════════════════════════════════════
    BIAS METRICS ENGINE
@@ -734,6 +735,24 @@ router.post("/", upload.single("file"), async (req, res) => {
       });
 
       console.log(`[analyze] ✅ ${docRef.id} — Grade: ${grade} (${score}/100)`);
+      await logAnalysisToBigQuery({
+        analysisId: docRef.id,
+        userId,
+        fileName,
+        outcomeCol,
+        grade,
+        score,
+        flaggedAttributes: biasResults.filter(
+          (b) => b.disparateImpact.flagged || b.statisticalParity.flagged,
+        ).length,
+        totalAttributes: biasResults.length,
+        complianceViolations: complianceResult.failCount,
+        intersectionalFlagged: intersectionalResult.pairs.filter(
+          (p) => p.flagged,
+        ).length,
+        rowCount: rows.length,
+        domain: complianceResult.domain,
+      });
     } catch (err) {
       console.error(`[analyze] ❌ ${docRef.id}:`, err.message);
       await docRef
