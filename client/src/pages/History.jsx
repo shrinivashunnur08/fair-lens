@@ -66,12 +66,17 @@ export default function History() {
     const q = query(
       collection(db, "analyses"),
       where("userId", "==", user.uid),
-      orderBy("createdAt", "desc"),
-      limit(20),
     );
     getDocs(q)
       .then((snap) => {
-        setAnalyses(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+        const data = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => {
+            const aTime = a.createdAt?.toDate?.() || new Date(0);
+            const bTime = b.createdAt?.toDate?.() || new Date(0);
+            return bTime - aTime;
+          });
+        setAnalyses(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));

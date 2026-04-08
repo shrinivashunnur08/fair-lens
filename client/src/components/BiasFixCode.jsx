@@ -216,7 +216,7 @@ export default function BiasFixCode({ analysisId, biasResults = [] }) {
               )}
             </div>
             <p className="text-muted text-xs font-body leading-relaxed max-w-2xl">
-              Gemini 1.5 Pro writes production-ready Python code that applies
+              Gemini 2.5 flash writes production-ready Python code that applies
               your chosen mitigation strategy to reduce the detected bias. The
               generated script is self-contained — run it directly with{" "}
               <span className="font-mono text-subtle">python fix_bias.py</span>.
