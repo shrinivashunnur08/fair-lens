@@ -69,6 +69,7 @@ export default function Navbar() {
               { label: "Home", to: "/", protected: false },
               { label: "Analyze", to: "/upload", protected: true },
               { label: "History", to: "/history", protected: true },
+              { label: "ProBias Shield", to: "/text-analyze", protected: true },
             ].map(({ label, to, protected: isProtected }) => (
               <button
                 key={to}
@@ -92,7 +93,6 @@ export default function Navbar() {
               </button>
             ))}
           </div>
-          <NavLink to="/text-analyze">ProBias Shield</NavLink>
 
           {/* Right: Auth */}
           <div className="flex items-center gap-3">
