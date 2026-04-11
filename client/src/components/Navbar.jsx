@@ -65,30 +65,34 @@ export default function Navbar() {
 
           {/* Center nav links */}
           <div className="hidden md:flex items-center gap-1">
-{[
-  { label: "Home", to: "/", protected: false },
-  { label: "Analyze", to: "/upload", protected: true },
-  { label: "History", to: "/history", protected: true },
-].map(({ label, to, protected: isProtected }) => (
-  <button
-    key={to}
-    onClick={() => {
-      if (isProtected && !user) {
-        toast("Please sign in to access " + label, { icon: "🔐", duration: 2000 });
-        return;
-      }
-      window.location.href = to;
-    }}
-    className={`px-4 py-2 rounded-lg text-sm font-medium font-body transition-all ${
-      location.pathname === to
-        ? "text-brand-400 bg-brand-500/10"
-        : "text-muted hover:text-white hover:bg-white/5"
-    }`}
-  >
-    {label}
-  </button>
-))}
+            {[
+              { label: "Home", to: "/", protected: false },
+              { label: "Analyze", to: "/upload", protected: true },
+              { label: "History", to: "/history", protected: true },
+            ].map(({ label, to, protected: isProtected }) => (
+              <button
+                key={to}
+                onClick={() => {
+                  if (isProtected && !user) {
+                    toast("Please sign in to access " + label, {
+                      icon: "🔐",
+                      duration: 2000,
+                    });
+                    return;
+                  }
+                  window.location.href = to;
+                }}
+                className={`px-4 py-2 rounded-lg text-sm font-medium font-body transition-all ${
+                  location.pathname === to
+                    ? "text-brand-400 bg-brand-500/10"
+                    : "text-muted hover:text-white hover:bg-white/5"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
+          <NavLink to="/text-analyze">ProBias Shield</NavLink>
 
           {/* Right: Auth */}
           <div className="flex items-center gap-3">

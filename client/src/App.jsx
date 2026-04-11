@@ -5,7 +5,7 @@ import Landing from "./pages/Landing";
 import Upload from "./pages/Upload";
 import Dashboard from "./pages/Dashboard";
 import History from "./pages/History";
-
+import TextAnalyzer from "./pages/TextAnalyzer";
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <PageLoader />;
@@ -41,6 +41,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Upload />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/text-analyze"
+          element={
+            <ProtectedRoute>
+              <TextAnalyzer />
             </ProtectedRoute>
           }
         />
