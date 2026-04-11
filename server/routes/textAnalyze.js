@@ -81,9 +81,23 @@ Format your response as JSON:
         const parsed = JSON.parse(cleaned);
         rewrittenText = parsed.rewritten || "";
         geminiExplanation = parsed.explanation || "";
-      } catch {
-        rewrittenText = text;
-        geminiExplanation = "Unable to generate rewrite.";
+      } catch (e) {
+        console.error("[Gemini parse error]", e.message);
+        // Try extracting from raw response
+        try {
+          const cleaned2 = response
+            .replace(/^```json\s*/im, "")
+            .replace(/^```\s*/im, "")
+            .replace(/```\s*$/im, "")
+            .replace(/[\x00-\x1F\x7F]/g, " ")
+            .trim();
+          const parsed2 = JSON.parse(cleaned2);
+          rewrittenText = parsed2.rewritten || text;
+          geminiExplanation = parsed2.explanation || "Analysis complete.";
+        } catch {
+          rewrittenText = text;
+          geminiExplanation = "Unable to generate rewrite.";
+        }
       }
     } else {
       rewrittenText = text;
