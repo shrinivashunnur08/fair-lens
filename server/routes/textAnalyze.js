@@ -63,41 +63,53 @@ Requirements:
 
 Also provide a 2-sentence explanation of the main bias issues found.
 
-Format your response as JSON:
-{
-  "rewritten": "...",
-  "explanation": "..."
-}`;
+IMPORTANT: Respond with ONLY valid JSON. No markdown. No backticks. No explanation outside JSON.
+{"rewritten": "full rewritten text here", "explanation": "2 sentence explanation here"}`
 
       try {
         const response = await generateContent(prompt, {
           maxTokens: 2000,
           temperature: 0.3,
         });
-        const cleaned = response
-          .replace(/^```json\s*/im, "")
-          .replace(/```\s*$/im, "")
+
+        // Aggressively strip all markdown fences
+        let cleaned = response
+          .replace(/```json/gi, "")
+          .replace(/```/g, "")
           .trim();
-        const parsed = JSON.parse(cleaned);
-        rewrittenText = parsed.rewritten || "";
-        geminiExplanation = parsed.explanation || "";
-      } catch (e) {
-        console.error("[Gemini parse error]", e.message);
-        // Try extracting from raw response
-        try {
-          const cleaned2 = response
-            .replace(/^```json\s*/im, "")
-            .replace(/^```\s*/im, "")
-            .replace(/```\s*$/im, "")
-            .replace(/[\x00-\x1F\x7F]/g, " ")
-            .trim();
-          const parsed2 = JSON.parse(cleaned2);
-          rewrittenText = parsed2.rewritten || text;
-          geminiExplanation = parsed2.explanation || "Analysis complete.";
-        } catch {
-          rewrittenText = text;
-          geminiExplanation = "Unable to generate rewrite.";
+
+        // Extract JSON object
+        const jsonStart = cleaned.indexOf("{");
+        const jsonEnd = cleaned.lastIndexOf("}");
+        if (jsonStart !== -1 && jsonEnd !== -1) {
+          cleaned = cleaned.slice(jsonStart, jsonEnd + 1);
         }
+
+        const parsed = JSON.parse(cleaned);
+        rewrittenText = parsed.rewritten || parsed.rewrite || parsed.text || "";
+        geminiExplanation = parsed.explanation || parsed.summary || "";
+
+        console.log(
+          "[textAnalyze] Gemini rewrite success, length:",
+          rewrittenText.length,
+        );
+      } catch (parseErr) {
+        console.error("[textAnalyze] Gemini parse error:", parseErr.message);
+
+        // Try to extract rewritten text with regex as last resort
+        const rewriteMatch = response?.match(
+          /"rewritten":\s*"([\s\S]+?)(?:",|"\s*})/,
+        )?.[1];
+        const explanationMatch = response?.match(
+          /"explanation":\s*"([^"]+)"/,
+        )?.[1];
+
+        rewrittenText = rewriteMatch
+          ? rewriteMatch.replace(/\\n/g, "\n").replace(/\\"/g, '"')
+          : "";
+        geminiExplanation =
+          explanationMatch ||
+          "Bias patterns detected above. Remove highlighted words for an inclusive document.";
       }
     } else {
       rewrittenText = text;
