@@ -16,7 +16,6 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // Run NLP + bias detection in parallel
     const [nlpResult, biasResult] = await Promise.all([
       analyzeTextWithNLP(text),
       Promise.resolve(detectBiasPatterns(text)),
@@ -24,33 +23,32 @@ router.post("/", async (req, res) => {
 
     const { detectedBias, biasScore, grade, totalIssues } = biasResult;
 
-    // Build highlighted text — mark biased words
     let highlightedText = text;
     const allBiasedWords = detectedBias.flatMap((b) => b.foundWords);
-
-    // Sort by length descending to avoid partial replacements
     allBiasedWords.sort((a, b) => b.length - a.length);
     for (const word of allBiasedWords) {
       const regex = new RegExp(`\\b${word}\\b`, "gi");
       highlightedText = highlightedText.replace(regex, `##${word}##`);
     }
 
-    // Gemini rewrites the text bias-free
     let rewrittenText = "";
     let geminiExplanation = "";
 
     if (detectedBias.length > 0) {
-      const rewritePrompt = `You are an inclusive language expert. Rewrite this ${documentType.replace("_", " ")} to remove ALL bias. Keep the same meaning but make it fully inclusive for all genders, ages, abilities, and cultures. Add "Equal Opportunity Employer" at the end.
+      const biasedWordsList = detectedBias
+        .map((b) => `${b.foundWords.join(", ")}`)
+        .join(", ");
 
-ORIGINAL:
+      const rewritePrompt = `You are an inclusive language expert. Rewrite the following ${documentType.replace("_", " ")} to remove all biased language. Make it fully inclusive for all genders, ages, abilities, and cultures. Keep the same meaning. Add "Equal Opportunity Employer" at the end.
+
+ORIGINAL TEXT:
 ${text}
 
-BIASED WORDS TO REPLACE:
-${detectedBias.map((b) => `${b.foundWords.join(", ")} → ${Object.values(b.replacements || {}).join(", ") || "use neutral alternatives"}`).join("\n")}
+BIASED WORDS TO REMOVE: ${biasedWordsList}
 
-Write ONLY the rewritten text. No explanation. No JSON. No markdown. Just the rewritten document.`;
+Write ONLY the rewritten text. No explanation. No JSON. No markdown. Just the plain rewritten text.`;
 
-      const explanationPrompt = `In exactly 2 sentences, explain the main bias issues found in this text: "${text.slice(0, 200)}". Be specific about which words are problematic and why.`;
+      const explanationPrompt = `In exactly 2 sentences, explain the main bias issues in this text: "${text.slice(0, 300)}". Be specific about which words are problematic and why.`;
 
       try {
         const [rewriteResponse, explanationResponse] = await Promise.all([
@@ -64,7 +62,7 @@ Write ONLY the rewritten text. No explanation. No JSON. No markdown. Just the re
         rewrittenText = rewriteResponse
           .replace(/^```[\w]*\n?/im, "")
           .replace(/```$/im, "")
-          .replace(/^(rewritten|here is|here's|output|result):?\s*/im, "")
+          .replace(/^(rewritten text|here is|here's|output|result):?\s*/im, "")
           .trim();
 
         geminiExplanation = explanationResponse
@@ -73,10 +71,14 @@ Write ONLY the rewritten text. No explanation. No JSON. No markdown. Just the re
           .trim();
 
         console.log("[textAnalyze] Rewrite length:", rewrittenText.length);
-      } catch (err) {
-        console.error("[textAnalyze] Gemini error:", err.message);
+        console.log(
+          "[textAnalyze] Explanation:",
+          geminiExplanation.slice(0, 80),
+        );
+      } catch (geminiErr) {
+        console.error("[textAnalyze] Gemini error:", geminiErr.message);
         rewrittenText = "";
-        geminiExplanation = `${detectedBias.length} bias patterns detected including ${detectedBias.map((b) => b.type).join(", ")}. Remove highlighted words to make this document more inclusive.`;
+        geminiExplanation = `${detectedBias.length} bias pattern(s) detected including ${detectedBias.map((b) => b.type).join(", ")}. Remove highlighted words to make this document more inclusive.`;
       }
     } else {
       rewrittenText = text;
@@ -84,7 +86,6 @@ Write ONLY the rewritten text. No explanation. No JSON. No markdown. Just the re
         "No significant bias detected. This text appears to be inclusive.";
     }
 
-    // Compliance implications
     const complianceRisks = [];
     for (const bias of detectedBias) {
       if (bias.severity === "CRITICAL" || bias.severity === "HIGH") {
