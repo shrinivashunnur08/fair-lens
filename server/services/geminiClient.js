@@ -13,7 +13,8 @@ if (process.env.GCP_PROJECT_ID) {
       location: process.env.GCP_LOCATION || "us-central1",
     });
     vertexModel = vertexAI.getGenerativeModel({
-      model: "gemini-2.5-flash-preview-04-17",
+      model: "gemini-2.0-flash-001",
+      
     });
     console.log(
       `✅ Vertex AI initialized — project: ${process.env.GCP_PROJECT_ID}`,
