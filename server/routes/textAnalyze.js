@@ -40,76 +40,43 @@ router.post("/", async (req, res) => {
     let geminiExplanation = "";
 
     if (detectedBias.length > 0) {
-      const biasedWordsList = detectedBias
-        .map((b) => `${b.type}: ${b.foundWords.join(", ")}`)
-        .join("\n");
+      const rewritePrompt = `You are an inclusive language expert. Rewrite this ${documentType.replace("_", " ")} to remove ALL bias. Keep the same meaning but make it fully inclusive for all genders, ages, abilities, and cultures. Add "Equal Opportunity Employer" at the end.
 
-      const prompt = `You are an expert in inclusive language and HR compliance.
-
-Rewrite this ${documentType.replace("_", " ")} to be completely free of bias.
-
-ORIGINAL TEXT:
+ORIGINAL:
 ${text}
 
-BIAS ISSUES FOUND:
-${biasedWordsList}
+BIASED WORDS TO REPLACE:
+${detectedBias.map((b) => `${b.foundWords.join(", ")} → ${Object.values(b.replacements || {}).join(", ") || "use neutral alternatives"}`).join("\n")}
 
-Requirements:
-1. Remove ALL biased language listed above
-2. Keep the same meaning and requirements
-3. Make it inclusive for all genders, ages, abilities, and cultures
-4. Keep it professional and compelling
-5. Add a note about the company being an equal opportunity employer
+Write ONLY the rewritten text. No explanation. No JSON. No markdown. Just the rewritten document.`;
 
-Also provide a 2-sentence explanation of the main bias issues found.
-
-IMPORTANT: Respond with ONLY valid JSON. No markdown. No backticks. No explanation outside JSON.
-{"rewritten": "full rewritten text here", "explanation": "2 sentence explanation here"}`
+      const explanationPrompt = `In exactly 2 sentences, explain the main bias issues found in this text: "${text.slice(0, 200)}". Be specific about which words are problematic and why.`;
 
       try {
-        const response = await generateContent(prompt, {
-          maxTokens: 2000,
-          temperature: 0.3,
-        });
+        const [rewriteResponse, explanationResponse] = await Promise.all([
+          generateContent(rewritePrompt, { maxTokens: 1500, temperature: 0.3 }),
+          generateContent(explanationPrompt, {
+            maxTokens: 200,
+            temperature: 0.3,
+          }),
+        ]);
 
-        // Aggressively strip all markdown fences
-        let cleaned = response
-          .replace(/```json/gi, "")
-          .replace(/```/g, "")
+        rewrittenText = rewriteResponse
+          .replace(/^```[\w]*\n?/im, "")
+          .replace(/```$/im, "")
+          .replace(/^(rewritten|here is|here's|output|result):?\s*/im, "")
           .trim();
 
-        // Extract JSON object
-        const jsonStart = cleaned.indexOf("{");
-        const jsonEnd = cleaned.lastIndexOf("}");
-        if (jsonStart !== -1 && jsonEnd !== -1) {
-          cleaned = cleaned.slice(jsonStart, jsonEnd + 1);
-        }
+        geminiExplanation = explanationResponse
+          .replace(/^```[\w]*\n?/im, "")
+          .replace(/```$/im, "")
+          .trim();
 
-        const parsed = JSON.parse(cleaned);
-        rewrittenText = parsed.rewritten || parsed.rewrite || parsed.text || "";
-        geminiExplanation = parsed.explanation || parsed.summary || "";
-
-        console.log(
-          "[textAnalyze] Gemini rewrite success, length:",
-          rewrittenText.length,
-        );
-      } catch (parseErr) {
-        console.error("[textAnalyze] Gemini parse error:", parseErr.message);
-
-        // Try to extract rewritten text with regex as last resort
-        const rewriteMatch = response?.match(
-          /"rewritten":\s*"([\s\S]+?)(?:",|"\s*})/,
-        )?.[1];
-        const explanationMatch = response?.match(
-          /"explanation":\s*"([^"]+)"/,
-        )?.[1];
-
-        rewrittenText = rewriteMatch
-          ? rewriteMatch.replace(/\\n/g, "\n").replace(/\\"/g, '"')
-          : "";
-        geminiExplanation =
-          explanationMatch ||
-          "Bias patterns detected above. Remove highlighted words for an inclusive document.";
+        console.log("[textAnalyze] Rewrite length:", rewrittenText.length);
+      } catch (err) {
+        console.error("[textAnalyze] Gemini error:", err.message);
+        rewrittenText = "";
+        geminiExplanation = `${detectedBias.length} bias patterns detected including ${detectedBias.map((b) => b.type).join(", ")}. Remove highlighted words to make this document more inclusive.`;
       }
     } else {
       rewrittenText = text;
