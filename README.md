@@ -13,7 +13,7 @@ FairLens is a full-stack AI-powered platform that enables any organisation — n
 | Resource | Link |
 |----------|------|
 | Live App | https://fairlens-14363.web.app |
-| Demo Video | https://drive.google.com/file/d/1HE2Xq9dV_3XOdZRBBvc3j9tNPJnZQW-g/view |
+| Demo Video | https://drive.google.com/file/d/1vEAAMwZ8VW6p5XebEuWNXEKXFOgjv5pn/view?usp=sharing |
 | GitHub | https://github.com/shrinivashunnur08/fair-lens |
 
 ---
