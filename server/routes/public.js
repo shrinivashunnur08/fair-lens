@@ -7,9 +7,21 @@ router.get("/:id", async (req, res) => {
   if (!snap.exists) return res.status(404).json({ error: "Not found" });
   const data = snap.data();
   if (!data.isPublic) return res.status(403).json({ error: "Not public" });
-  // Strip userId/email for privacy
   const { userId, userEmail, ...safe } = data;
   res.json({ id: snap.id, ...safe });
+});
+
+// POST /api/public/:id/share — make an analysis publicly accessible
+router.post("/:id/share", async (req, res) => {
+  try {
+    await db
+      .collection("analyses")
+      .doc(req.params.id)
+      .update({ isPublic: true, sharedAt: new Date() });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

@@ -12,6 +12,62 @@ function getNLPClient() {
 
 // Comprehensive bias word dictionaries
 const BIAS_PATTERNS = {
+  caste_bias: {
+    words: [
+      "upper caste",
+      "lower caste",
+      "scheduled caste",
+      "general category",
+      "brahmin",
+      "forward caste",
+      "backward class",
+      "obc",
+      "sc/st",
+      "community certificate",
+      "caste certificate",
+      "gotra",
+      "jati",
+      "clean background",
+      "good family",
+      "traditional family values",
+      "cultured family",
+      "well-settled family",
+    ],
+    replacements: {
+      "upper caste": "qualified candidate",
+      "good family": "professional background",
+      "traditional family values": "strong work ethic",
+      "clean background": "verified background",
+    },
+    severity: "CRITICAL",
+    type: "Caste Discrimination",
+    description:
+      "Violates SC/ST (Prevention of Atrocities) Act 1989 and Article 15 of Indian Constitution",
+    category: "caste_bias",
+  },
+  socioeconomic_bias: {
+    words: [
+      "elite institution",
+      "premium college",
+      "tier 1 college",
+      "iit only",
+      "iim only",
+      "ivy league",
+      "premier institute",
+      "top school background",
+      "privileged background",
+    ],
+    replacements: {
+      "elite institution": "accredited institution",
+      "tier 1 college": "qualified institution",
+      "premier institute": "recognized institution",
+    },
+    severity: "HIGH",
+    type: "Socioeconomic Bias",
+    description:
+      "May discriminate based on socioeconomic background — violates equal opportunity principles",
+    category: "socioeconomic_bias",
+  },
   gender_male: {
     words: [
       "rockstar",

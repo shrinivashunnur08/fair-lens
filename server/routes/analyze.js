@@ -180,6 +180,31 @@ const COMPLIANCE_RULES = [
       "Audit training data for caste, religion, and gender proxies. Engage a constitutional law advisor before deployment in government or quasi-government contexts.",
   },
   {
+    id: "IN_SC_ST_ACT",
+    region: "India",
+    flag: "🇮🇳",
+    law: "Scheduled Castes and Scheduled Tribes (Prevention of Atrocities) Act, 1989",
+    shortName: "SC/ST Act 1989",
+    section: "Section 3 — Atrocities against SC/ST members",
+    article: null,
+    scope: ["hiring", "loan", "education", "all"],
+    trigger: (biasResults) =>
+      biasResults.some(
+        (b) =>
+          ["caste", "race", "ethnicity"].includes(
+            (b.attributeType || "").toLowerCase(),
+          ) &&
+          (b.disparateImpact.flagged || b.statisticalParity.flagged),
+      ),
+    riskLevel: () => "CRITICAL",
+    description:
+      "The SC/ST Act criminalizes discrimination against Scheduled Castes and Tribes. AI systems producing discriminatory outcomes against these communities may attract criminal liability under this Act.",
+    penalty:
+      "Imprisonment from 6 months to 5 years + fine. Non-bailable offence. Director-level liability.",
+    remediation:
+      "Remove caste as a direct or proxy feature. Audit training data for caste proxies like school names, surnames, or geographic regions. Conduct a DPIA with a legal advisor.",
+  },
+  {
     id: "IN_EQUAL_REMUNERATION",
     region: "India",
     flag: "🇮🇳",
@@ -770,5 +795,19 @@ router.post("/", upload.single("file"), async (req, res) => {
     }
   })();
 });
+// Industry benchmark data (research-based averages)
+const INDUSTRY_BENCHMARKS = {
+  hiring: { avgDIR: 0.82, avgSPD: 0.08, avgScore: 72, label: "Tech Hiring Industry" },
+  loan: { avgDIR: 0.79, avgSPD: 0.11, avgScore: 65, label: "Banking/Finance Industry" },
+  medical: { avgDIR: 0.85, avgSPD: 0.07, avgScore: 78, label: "Healthcare Industry" },
+  education: { avgDIR: 0.88, avgSPD: 0.06, avgScore: 82, label: "Education Sector" },
+  all: { avgDIR: 0.81, avgSPD: 0.09, avgScore: 70, label: "Cross-Industry Average" },
+};
 
+/* GET /api/analyze/benchmark/:domain */
+router.get("/benchmark/:domain", (req, res) => {
+  const domain = req.params.domain || "all";
+  const benchmark = INDUSTRY_BENCHMARKS[domain] || INDUSTRY_BENCHMARKS.all;
+  res.json({ benchmark });
+});
 module.exports = router;

@@ -50,3 +50,9 @@ client/.env.production
 client/.env
 client/.env.local
 server/.env
+
+
+echo node_modules/ > "E:\Google Hackathon\fair-lens\server\.gcloudignore"
+echo .env >> "E:\Google Hackathon\fair-lens\server\.gcloudignore"
+echo *.log >> "E:\Google Hackathon\fair-lens\server\.gcloudignore"
+echo .git >> "E:\Google Hackathon\fair-lens\server\.gcloudignore"

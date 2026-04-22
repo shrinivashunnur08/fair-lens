@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, onSnapshot, getDoc } from "firebase/firestore";
+import FairnessCertificate from "../components/FairnessCertificate";
 import {
   BarChart,
   Bar,
@@ -500,8 +501,19 @@ export default function Dashboard() {
   const [notFound, setNotFound] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [rows, setRows] = useState([]); // for What-If Simulator
-  const [downloading, setDownloading] = useState(false); // PDF report
+  const [downloading, setDownloading] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+ const [sharing, setSharing] = useState(false);
+  const [shareUrl, setShareUrl] = useState(null);
+  const [benchmark, setBenchmark] = useState(null);
+
+  useEffect(() => {
+    if (!analysis?.results?.complianceRadar?.domain) return;
+    fetch(`${import.meta.env.VITE_API_URL}/api/analyze/benchmark/${analysis.results.complianceRadar.domain}`)
+      .then((r) => r.json())
+      .then((d) => setBenchmark(d.benchmark))
+      .catch(() => {});
+  }, [analysis?.results?.complianceRadar?.domain]);
   /* Real-time Firestore listener */
   useEffect(() => {
     if (!id) return;
@@ -749,6 +761,46 @@ export default function Dashboard() {
             </div>
           </div>
           <button
+            onClick={async () => {
+              setSharing(true);
+              try {
+                await fetch(
+                  `${import.meta.env.VITE_API_URL}/api/public/${id}/share`,
+                  { method: "POST" },
+                );
+                const url = `${window.location.origin}/dashboard/${id}`;
+                setShareUrl(url);
+                navigator.clipboard.writeText(url);
+                toast.success("Public link copied to clipboard!");
+              } catch {
+                toast.error("Failed to generate share link");
+              } finally {
+                setSharing(false);
+              }
+            }}
+            disabled={sharing}
+            className="btn-ghost text-sm"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+              />
+            </svg>
+            {shareUrl
+              ? "✓ Link Copied!"
+              : sharing
+                ? "Sharing…"
+                : "Share Report"}
+          </button>
+          <button
             onClick={() => navigate("/upload")}
             className="btn-ghost text-sm"
           >
@@ -767,6 +819,7 @@ export default function Dashboard() {
             </svg>
             New Analysis
           </button>
+          <FairnessCertificate analysis={analysis} />
           <button
             onClick={handleDownloadReport}
             disabled={downloading}
@@ -1096,7 +1149,69 @@ export default function Dashboard() {
                 </p>
               </motion.div>
             )}
+{/* Industry Benchmark Comparison */}
+            {benchmark && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="glass-card p-5"
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-brand-400 text-xs font-display font-700 uppercase tracking-widest">
+                    📊 Industry Benchmark — {benchmark.label}
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  {[
+                    {
+                      label: "Your Score",
+                      value: `${fairScore.score}/100`,
+                      sub: fairScore.grade,
+                      color: gradeCol,
+                    },
+                    {
+                      label: "Industry Average",
+                      value: `${benchmark.avgScore}/100`,
+                      sub: "avg",
+                      color: "#64748b",
+                    },
+                    {
+                      label: "vs Industry",
+                      value:
+                        fairScore.score >= benchmark.avgScore
+                          ? `+${fairScore.score - benchmark.avgScore} pts`
+                          : `${fairScore.score - benchmark.avgScore} pts`,
+                      sub:
+                        fairScore.score >= benchmark.avgScore
+                          ? "above average"
+                          : "below average",
+                      color:
+                        fairScore.score >= benchmark.avgScore ? "#10b981" : "#ef4444",
+                    },
+                  ].map(({ label, value, sub, color }) => (
+                    <div key={label} className="text-center p-3 rounded-xl bg-bg-card border border-bg-border">
+                      <p className="text-muted text-[10px] font-body uppercase mb-1">{label}</p>
+                      <p className="font-display font-800 text-xl" style={{ color }}>{value}</p>
+                      <p className="text-muted text-[10px] font-body mt-0.5">{sub}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 h-2 bg-bg-secondary rounded-full overflow-hidden relative">
+                  <div className="absolute h-full bg-brand-500/30 rounded-full"
+                    style={{ width: `${benchmark.avgScore}%` }} />
+                  <div className="absolute h-full rounded-full transition-all duration-1000"
+                    style={{ width: `${fairScore.score}%`, background: gradeCol }} />
+                </div>
+                <div className="flex justify-between text-[10px] text-muted font-body mt-1">
+                  <span>0</span>
+                  <span className="text-brand-400/60">Industry avg: {benchmark.avgScore}</span>
+                  <span>100</span>
+                </div>
+              </motion.div>
+            )}
 
+           
             {/* Attribute quick-cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {biasResults.map((b, i) => (

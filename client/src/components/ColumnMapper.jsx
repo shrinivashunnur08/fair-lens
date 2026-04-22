@@ -8,7 +8,9 @@ const PROTECTED_KEYWORDS = {
   age: ["age", "dob", "birth", "born", "year"],
   disability: ["disability", "disabled", "handicap"],
   religion: ["religion", "faith", "religious"],
+  caste: ["caste", "category", "sc", "st", "obc", "community", "jati", "varna"],
   marital: ["marital", "married", "single", "divorced"],
+  socioeconomic: ["income", "salary", "wealth", "class", "tier", "bpl"],
 };
 
 const OUTCOME_KEYWORDS = [

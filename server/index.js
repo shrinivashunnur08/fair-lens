@@ -37,6 +37,9 @@ app.use("/api/trends", trendsRoute);
 
 const textAnalyzeRoute = require("./routes/textAnalyze");
 app.use("/api/text-analyze", textAnalyzeRoute);
+
+const publicRoute = require("./routes/public");
+app.use("/api/public", publicRoute);
 /* ── Health check (Cloud Run needs this) ───────────── */
 app.get("/health", (req, res) => {
   res.json({ status: "ok", service: "FairLens API", version: "1.0.0" });

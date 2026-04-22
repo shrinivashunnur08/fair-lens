@@ -70,6 +70,7 @@ export default function Navbar() {
               { label: "Analyze", to: "/upload", protected: true },
               { label: "History", to: "/history", protected: true },
               { label: "ProBias Shield", to: "/text-analyze", protected: true },
+{ label: "Compare", to: "/compare", protected: true },
             ].map(({ label, to, protected: isProtected }) => (
               <button
                 key={to}

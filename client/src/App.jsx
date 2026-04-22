@@ -6,6 +6,7 @@ import Upload from "./pages/Upload";
 import Dashboard from "./pages/Dashboard";
 import History from "./pages/History";
 import TextAnalyzer from "./pages/TextAnalyzer";
+import Compare from "./pages/Compare";
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <PageLoader />;
@@ -49,6 +50,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <TextAnalyzer />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/compare"
+          element={
+            <ProtectedRoute>
+              <Compare />
             </ProtectedRoute>
           }
         />

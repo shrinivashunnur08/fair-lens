@@ -1,16 +1,21 @@
-# React + Vite
+# FairLens — AI Bias Detection & Audit Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **Google Solution Challenge 2026** · Team: Angry Nerds · [Live Demo](https://fairlens-14363.web.app) · [Demo Video](https://drive.google.com/file/d/1HE2Xq9dV_3XOdZRBBvc3j9tNPJnZQW-g/view)
 
-Currently, two official plugins are available:
+FairLens is a full-stack AI-powered platform that enables any organisation — not just ML teams — to upload a dataset, detect bias across protected attributes, understand legal implications under India's DPDP Act 2023, the SC/ST Act, the EU AI Act, and generate a board-ready PDF audit report — all in under 60 seconds.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Addresses:** UN SDG 10 (Reduced Inequalities) · UN SDG 8 (Decent Work & Economic Growth)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Live Links
 
-## Expanding the ESLint configuration
+| Resource | Link |
+|----------|------|
+| Live App | https://fairlens-14363.web.app |
+| Demo Video | https://drive.google.com/file/d/1HE2Xq9dV_3XOdZRBBvc3j9tNPJnZQW-g/view |
+| GitHub | https://github.com/shrinivashunnur08/fair-lens |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🏗️ Architecture
